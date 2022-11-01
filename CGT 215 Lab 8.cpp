@@ -67,8 +67,26 @@ int main()
 	world.AddPhysicsBody(right);
 
 	Texture redTex;
-	LoadTex(redTex, "Images/Digital_Duck.jpg");
+	LoadTex(redTex, "Images/Digital_Duck.");
 	PhysicsShapeList<PhysicsSprite> ducks;
+	for (int i(0); i < 6; i++) {
+		PhysicsSprite& duck = ducks.Create();
+		duck.setTexture(redTex);
+		int x = 50 + ((700 / 5) * i);
+		Vector2f sz = duck.getSize();
+		duck.setCenter(Vector2f(x, 20 + (sz.y / 2)));
+		duck.setVelocity(Vector2f(0.25, 0));
+		world.AddPhysicsBody(duck);
+		duck.onCollision = [&drawingArrow, &world, &arrow, &duck, &ducks, &score] (PhysicsBodyCollisionResult result) {
+			if (result.object2 == arrow) {
+				drawingArrow = false;
+				world.RemovePhysicsBody(arrow);
+				world.RemovePhysicsBody(duck);
+				ducks.QueueRemove(duck);
+				score += 10;
+			}
+		};
+	}
 
 	top.onCollision = [&drawingArrow, &world, &arrow]
 	(PhysicsBodyCollisionResult result) {
@@ -137,6 +155,7 @@ int main()
 			if (drawingArrow) {
 				window.draw(arrow);
 			}
+			ducks.DoRemovals();
 			for (PhysicsShape& duck : ducks) {
 				window.draw((PhysicsSprite&)duck);
 			}

@@ -67,7 +67,7 @@ int main()
 	world.AddPhysicsBody(right);
 
 	Texture redTex;
-	LoadTex(redTex, "Images/Digital_Duck.");
+	LoadTex(redTex, "Images/duck_cartoon_resized.png");
 	PhysicsShapeList<PhysicsSprite> ducks;
 	for (int i(0); i < 6; i++) {
 		PhysicsSprite& duck = ducks.Create();
